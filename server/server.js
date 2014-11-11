@@ -27,7 +27,7 @@ var adder = function (host, isAlive)
 
 }
 var ping = Meteor.npmRequire('ping');
-var hosts = ['127.0.0.1', 'google.com', 'yahoo.com'];
+var hosts = ['127.0.0.1', 'google.com', 'facebook.com'];
 Meteor.methods (
 	{
 		'pinger' : function ()

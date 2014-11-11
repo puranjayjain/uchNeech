@@ -1,8 +1,30 @@
+Meteor.startup (function ()
+{
+	style = document.createElement ("link");
+	$(style).attr ('rel','stylesheet');
+	platform = navigator.userAgent? navigator.userAgent : null;
+			if (platform)
+			{
+				if (/android/i.test(platform))
+				{
+					 $(style).attr ('href', '/lib/bootcards-android-lite.css');
+				}
+				else if (/iPhone|iPad|iPod/i.test(platform))
+				{
+					 $(style).attr ('href', '/lib/bootcards-ios-lite.css');
+				}
+				else
+				{
+					 $(style).attr ('href', '/lib/bootcards-desktop-lite.css');
+				}
+			}
+			$('head').append ($(style));
+})
 var pinging = function ()
 {
 	Meteor.call ('pinger', function (error, result )
 	{
-		if (error) {console.log (error);} 
+		if (error) {console.log (error);}
 		else
 		{
 			Session.set ('result', result);
@@ -44,7 +66,7 @@ Template.body.events (
 					{
 						console.log (error);
 					}
-					else 
+					else
 					{
 						document.getElementById("newHostForm").reset();
 					}
