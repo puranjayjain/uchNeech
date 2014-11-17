@@ -32,7 +32,7 @@ var pinging = function ()
 	});
 };
 
-Meteor.setInterval (pinging, 6000);
+
 Template.body.helpers (
 	{
 		'isAlive' : function ()
