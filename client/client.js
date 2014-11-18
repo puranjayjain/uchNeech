@@ -1,75 +1,74 @@
 Meteor.startup (function ()
-{
-	style = document.createElement ("link");
-	$(style).attr ('rel','stylesheet');
-	platform = navigator.userAgent? navigator.userAgent : null;
-			if (platform)
-			{
-				if (/android/i.test(platform))
-				{
-					 $(style).attr ('href', '/lib/bootcards-android-lite.css');
-				}
-				else if (/iPhone|iPad|iPod/i.test(platform))
-				{
-					 $(style).attr ('href', '/lib/bootcards-ios-lite.css');
-				}
-				else
-				{
-					 $(style).attr ('href', '/lib/bootcards-desktop-lite.css');
-				}
-			}
-			$('head').append ($(style));
-})
-var pinging = function ()
-{
-	Meteor.call ('pinger', function (error, result )
 	{
-		if (error) {console.log (error);}
-		else
+		
+	});
+devices = new ReactiveVar (0);
+states = new ReactiveVar (0);
+selector = new ReactiveVar (0);
+Template.tab.events (
+	{
+		'click a' : function (event, template)
 		{
-			Session.set ('result', result);
+			template.$ ("a").removeClass ("active");
+			$(event.target).addClass ("active");
+			devices.set ( event.currentTarget.id);
+			selector.set (event.currentTarget.id==="all" ? {} :{class : event.target.id });
 		}
 	});
-};
+Template.secondary.events (
+	{
+		'click a' : function (event, template)
+		{
+			template.$ ("a").removeClass ("active");
+			$(event.currentTarget).addClass ("active");
+			states.set (event.currentTarget.id);
+		}
+	});
 
-
+Template.table.helpers (
+	{
+		'any' : function ()
+		{
+			var sel = selector.get();
+			return Hosts.find(sel).count();
+		},
+		'showAlive' : function ()
+		{ 
+			var temp = states.get ();
+			return (temp==5 || temp == 6);
+		},
+		'showDead' : function ()
+		{ 
+			var temp = states.get();
+			return (temp==5 || temp == 7);
+		},
+		'alive' : function ()
+		{
+			var sel = selector.get();
+			sel = (_.extend (sel, {state: 'alive'})); console.log (sel);
+			return Hosts.find (sel);
+		},
+		'dead' : function ()
+		{
+			var sel = selector.get();
+			sel = (_.extend (sel, {state: 'dead'}));console.log (sel);
+			return Hosts.find (sel);
+		}
+	});
+Template.cell.helpers (
+	{
+		'ip': function () { return this.ip;},
+		'since' : function ()
+		{
+			var date = new Date();
+			var one_min=1000*60*60;
+			return (this['state']==='alive') ? (date - _.last (this['alive']))/one_min : (date - _.last (this['dead']))/one_min;
+		}
+	});
 Template.body.helpers (
 	{
-		'isAlive' : function ()
+		'selected' : function ()
 		{
-				var result = Session.get ('result');
-				if (result)
-				{
-					return result[true];
-				}
-		},
-		'isDead' : function ()
-		{
-			var result = Session.get ('result');
-			if (result)
-			{
-				return result[false];
-			}
-		},
-		'host' : function ()
-		{
-			return this;
-		}
-	});
-Template.body.events (
-	{
-		'click #addHost' : function (event, template)
-		{
-			Meteor.call ('addHost', $("#newHost").val(), function (error, result)
-				{
-					if (error)
-					{
-						console.log (error);
-					}
-					else
-					{
-						document.getElementById("newHostForm").reset();
-					}
-				});
+			return !(devices.get()=== 0 || states.get()===0);
 		}
 	});

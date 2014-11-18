@@ -31,12 +31,12 @@ Meteor.startup (function ()
 	hosts = Hosts.find().fetch();
 	if (!hosts.length)
 	{
-		Hosts.insert ({ip: "google.com", alive:[], dead:[]});
-		Hosts.insert ({ip: "facebook.com", alive:[], dead:[]});
-		Hosts.insert ({ip: "yahoo.com", alive:[], dead:[]});
-		Hosts.insert ({ip: "xyz.com", alive:[], dead:[]});
-		Hosts.insert ({ip: "127.0.0.1", alive:[], dead:[]});
-		Hosts.insert ({ip: "192.168.50.53", alive:[], dead:[]});
+		Hosts.insert ({ip: "google.com", alive:[], dead:[], class: "servers"});
+		Hosts.insert ({ip: "facebook.com", alive:[], dead:[], class: "firewalls"});
+		Hosts.insert ({ip: "yahoo.com", alive:[], dead:[], class: "aps"});
+		Hosts.insert ({ip: "xyz.com", alive:[], dead:[], class: "servers"});
+		Hosts.insert ({ip: "127.0.0.1", alive:[], dead:[], class: "servers"});
+		Hosts.insert ({ip: "192.168.50.53", alive:[], dead:[], class: "aps"});
 	}
 })
 
@@ -59,8 +59,7 @@ Meteor.methods (
 			hosts.push(host);
 		}
 	});
-var Future = Npm.require('fibers/future');
-var fut = new Future();
+
 // var bound_callback = Meteor.bindEnvironment(probe_callback);
 
 /*var pinger = function ()

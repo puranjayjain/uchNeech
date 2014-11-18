@@ -14,9 +14,11 @@ if (Meteor.isServer)
 									{
 										var date = new Date ();
 										var wasAlive = function (host)
-										{ //console.log (host);
+										{ 
+											//console.log (host);
 											if (_.last (host.alive) > _.last (host.dead))
-											{ //console.log ("true "+ host['ip']);
+											{ 
+												//console.log ("true "+ host['ip']);
 												return true;
 											}
 											else { return false;}
@@ -28,33 +30,62 @@ if (Meteor.isServer)
 												if (wasAlive (host) !== isAlive)
 												{
 													if (isAlive === true)
-													{ console.log (host['ip']+ " alive");
-														Hosts.update (host, {$push : {alive : date}});
+													{ 
+														// console.log (host['ip']+ " alive");
+														Hosts.update (host, 
+															{
+																"$push" : {alive : date}, 
+																"$set" : {state: "alive"}
+															});
 													}
 													else
-													{ console.log (host['ip']+ " dead");
-														Hosts.update (host, {$push : {dead : date}});
+													{ 
+														// console.log (host['ip']+ " dead");
+														Hosts.update (host, 
+															{
+																"$push" : {dead : date}, 
+																"$set" : {state: "dead"}
+															});
 													}
 												}
 											}
 											else if (host['alive'].length && !isAlive)
 											{
-												console.log ("second update dead "+host['ip']);
-												Hosts.update (host, {$push : {dead : date}});
+												
+												// console.log ("second update dead "+host['ip']);
+												Hosts.update (host, 
+															{
+																"$push" : {dead : date}, 
+																"$set" : {state: "dead"}
+															});
 											}
 											else if (host['dead'].length && isAlive)
 											{
-												console.log ("second update alive "+host['ip']);
-												Hosts.update (host, {$push : {alive : date}});
+												// console.log ("second update alive "+host['ip']);
+												Hosts.update (host, 
+															{
+																"$push" : {alive : date}, 
+																"$set" : {state: "alive"}
+															});
 											}
 										}
 										else if (isAlive)
-										{ console.log ("first udpate "+host['ip']+ " alive");
-											Hosts.update (host, {$push : {alive : date}});
+										{ 
+											// console.log ("first udpate "+host['ip']+ " alive");
+											Hosts.update (host, 
+															{
+																"$push" : {alive : date}, 
+																"$set" : {state: "alive"}
+															});
 										}
 										else
-										{ console.log ("first udpate "+host['ip']+ " dead");
-											Hosts.update (host, {$push : {dead : date}});
+										{ 
+											// console.log ("first udpate "+host['ip']+ " dead");
+											Hosts.update (host, 
+															{
+																"$push" : {dead : date}, 
+																"$set" : {state: "dead"}
+															});
 										}
 									}, function (e){throw e;})
 				Meteor.wrapAsync (ping.sys.probe (ip , function (isAlive) {pingBoundedCallback (isAlive);}));

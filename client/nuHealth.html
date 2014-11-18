@@ -8,102 +8,92 @@
       <!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
       <meta name="apple-mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-status-bar-style" content="black">
+      <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 
 <body>
   {{> navbar}}
-<div class="container-fluid text-center top">
-	<div class="row">
-		<div class="col-md-4 col-md-offset-4 table-responsive">
-			<table class="table table-striped table-condensed table-bordered">
-				<thead class="bg-success">
-					<h1>Alive</h1>
-				</thead>
-				<tbody>
-				{{#each isAlive}}
-				<tr class="text-success">
-					{{host}}
-					<i class="fa fa-arrow-up pull-right"></i>
-				</tr>
-				{{/each}}
-				</tbody>
-			</table>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-4 col-md-offset-4 table-responsive">
-			<table class="table table-striped table-condensed table-bordered">
-				<thead class="bg-danger">
-					<h1>Dead</h1>
-				</thead>
-				<tbody>
-				{{#each isDead}}
-				<tr class="text-danger">
-					{{host}}
-					<i class="fa fa-arrow-down pull-right"></i>
-				</tr>
-				{{/each}}
-				</tbody>
-			</table>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-4 col-md-offset-4">
-			<form class="form-inline" role="form" id="newHostForm">
-				<div class="form-group">
-					<label class="sr-only" for="newHost">Add a new host to monitor</label>
-					<div class="input-group">
-						<input class="form-control" id="newHost" type="text" placeholder="Add a new host to monitor">
-						<span class="input-group-btn">
-							<button type="button" class="btn btn-primary" id="addHost">+</button>
-						</span>
-					</div>
-				</div>
-			</form>
-		</div>
-	</div>
-</div>
+  <div class="content">
+  	  {{#if selected}}
+  		  {{>table}}
+  	  {{else}}
+  	  <div class="content-padded">
+  		  <h1>Welcome :)</h1>
+  		</div>
+  	  {{/if}}
+  </div>
 </body>
 
 
 <template name="navbar">
-	<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-	  <div class="container">
-	    <button type="button" class="btn btn-default btn-back pull-left hidden" onclick="history.back()">
-	      <i class="fa fa-lg fa-chevron-left"></i>
-	      <span>Back</span>
-	    </button>
-	    <button type="button" class="btn btn-default btn-menu pull-left offcanvas-toggle">
-	      <i class="fa fa-lg fa-bars"></i>
-	      <span>Menu</span>
-	    </button>
-	    <a class="navbar-brand" title="UchNeech" href="/">UchNeech</a>
-	    <div class="navbar-collapse collapse">
-	      <ul class="nav navbar-nav">
-	        {{> navs}}
-	      </ul>
-	    </div>
-	  </div>
+	<div class="bar bar-nav">
+		<h1 class="title">UchNeech</h1>
 	</div>
-	  <div class="navmenu offcanvas offcanvas-left">
-		  <ul class="nav">
-		  	{{> navs}}
-		  </ul>
-	  </div>
+	{{> secondary}}
+	{{> tab}}
 </template>
 
-<template name="navs">
-<li>
-	<a href="#">Servers</a>
-</li>
-<li>
-	<a href="#">Acccess points</a>
-</li>
-<li>
-	<a href="#">Firewalls</a>
-</li>
-<li class="divider"></li>
-<li>
-	<a href="#">Contacts</a>
-</li>
+ <template name="secondary">
+	 <div class="bar bar-standard bar-footer-secondary">
+	   <div class="segmented-control">
+		   	   <a href="#" class="control-item" id="5">
+		   			<i class="fa fa-arrow-up"></i>/<i class="fa fa-arrow-down"></i>
+		   	   </a>
+		   	   <a href="#" class="control-item" id="6">
+		   			<i class="fa fa-arrow-up"></i>
+		   	   </a>
+		   	   <a href="#" class="control-item" id="7">
+		   			<i class="fa fa-arrow-down"></i>
+		   	   </a>
+	   </div>
+	 </div>
+ </template>
+
+ <template name="tab">
+	 <div class="bar bar-standard bar-footer">
+ 		<div class="segmented-control">
+ 			<a class="control-item" href="#" id="all">All</a>
+ 			<a class="control-item" href="#" id="servers">Servers</a>
+ 			<a class="control-item" href="#" id="firewalls">Firewalls</a>
+ 			<a class="control-item" href="#" id="aps">Access Points</a>
+ 		</div>
+	 </div>
+</template>
+
+<template name= "cell">
+	<li class="table-view-cell">
+	    <a class="navigate-right">
+	      <span class="badge">{{since}}</span>
+	      {{ip}}
+	    </a>
+	</li>
+</template>
+
+<template name="table">
+{{#if any}}
+	<ul class="table-view">
+		{{#if showAlive}}
+			<li class="table-view-cell table-view-divider text-center"><i class="fa fa-arrow-up"></i></li>
+			{{#each alive}}
+				{{> cell}}
+			{{else}}
+				<h4>None <i class="fa fa-arrow-up"></i></h4>
+			{{/each}}
+		{{/if}}
+		{{#if showDead}}
+			<li class="table-view-cell table-view-divider text-center"><i class="fa fa-arrow-down"></i></li>
+			{{#each dead}}
+				{{> cell}}
+			{{else}}
+				<h4>None <i class="fa fa-arrow-down"></i></h4>
+			{{/each}}
+		{{/if}}
+	</ul>
+{{else}}
+	<h1>Nothing to show here </h1>
+{{/if}}
+</template>
+
+<template name= "devices">
+
 </template>
