@@ -14,6 +14,7 @@
 <body>
   {{> navbar}}
   <div class="content">
+  {{#if state "welcome"}}
   	  {{#if selected}}
   		  {{>table}}
   	  {{else}}
@@ -21,16 +22,26 @@
   		  <h1>Welcome :)</h1>
   		</div>
   	  {{/if}}
+   {{/if}}
+   {{#if state "history"}}
+	   {{> history}}
+   {{/if}}
   </div>
 </body>
 
 
 <template name="navbar">
-	<div class="bar bar-nav">
+	<header class="bar bar-nav">
 		<h1 class="title">UchNeech</h1>
-	</div>
+		{{#unless state "welcome"}}
+			<a class="icon icon-home pull-left"></a>
+		{{/unless}}
+		<a class="icon icon-gear pull-right"></a>
+	</header>
+	{{#if state "welcome"}}
 	{{> secondary}}
 	{{> tab}}
+	{{/if}}
 </template>
 
  <template name="secondary">
@@ -62,9 +73,9 @@
 
 <template name= "cell">
 	<li class="table-view-cell">
+		{{ip}}
 	    <a class="navigate-right">
-	      <span class="badge">{{since}}</span>
-	      {{ip}}
+	      <span class="badge">{{since}}</span>  
 	    </a>
 	</li>
 </template>
@@ -94,6 +105,15 @@
 {{/if}}
 </template>
 
-<template name= "devices">
-
+<template name= "history">
+<div class="card">
+<h3>Showing history for {{ip}}</h3>
+	<ul class="table-view">
+		{{#each hist}}
+			<li class="table-view-cell fa {{which}}">{{this}}</li>
+		{{else}}
+			<li class="table-view-cell">Sorry no records.</li>
+		{{/each}}
+	</ul>
+</div>
 </template>
