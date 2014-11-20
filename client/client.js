@@ -73,7 +73,7 @@ Template.cell.helpers (
 			var one_min=1000*60;
 			var xyz = (this['state']==='alive') ? (date - _.last (this['alive']).getTime()) : (date - _.last (this['dead']).getTime());
 			// console.log (xyz+ " - "+ this['ip']);
-			return Math.round (xyz/one_min);
+			return Math.round (xyz/one_min) + ' min';
 		}
 	});
 
