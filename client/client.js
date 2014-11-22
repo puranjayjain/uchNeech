@@ -6,7 +6,7 @@ var first, flip;
 devices = new ReactiveVar (0);
 states = new ReactiveVar (0);
 selector = new ReactiveVar (0);
-
+var date = new ReactiveVar (0);
 Template.navbar.events (
 	{
 		'click a.pull-left' : function ()
@@ -64,19 +64,28 @@ Template.table.helpers (
 			return Hosts.find (sel);
 		}
 	});
+
 Template.cell.helpers (
 	{
 		'ip': function () { return this.ip;},
 		'since' : function ()
 		{
-			var date = new Date().getTime();
+			var d = date.get();
+			// d= new Date().getTime();
 			var one_min=1000*60;
-			var xyz = (this['state']==='alive') ? (date - _.last (this['alive']).getTime()) : (date - _.last (this['dead']).getTime());
+			var xyz = (this['state']==='alive') ? (d - _.last (this['alive']).getTime()) : (d - _.last (this['dead']).getTime());
 			// console.log (xyz+ " - "+ this['ip']);
 			return Math.round (xyz/one_min) + ' min';
 		}
 	});
-
+Template.cell.rendered = function ()
+{
+	var dateSetter = function ()
+	{
+		date.set (new Date().getTime());
+	}
+	Meteor.setInterval (dateSetter, 3000);
+}
 Template.cell.events (
 	{
 		'click li' : function (event, template )
